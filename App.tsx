@@ -59,15 +59,11 @@ export default function App() {
       if (!secondInput) {
         // Update the operator until a secondInput is entered
         setOperator(value);
+        return;
       } else {
         // Multiple calculations not supported
         return;
       }
-    }
-
-    if (isOperator && !secondInput) {
-      setOperator(value);
-      return;
     }
 
     // Finally, populate the secondInput
