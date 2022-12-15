@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
     textAlign: "right",
     color: "white",
     fontSize: 50,
-    lineHeight: "100%",
+    lineHeight: 100,
     paddingRight: 10,
   },
 });
