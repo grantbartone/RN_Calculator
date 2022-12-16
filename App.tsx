@@ -25,8 +25,6 @@ export default function App() {
       return;
     }
 
-    // TODO: Add validation
-
     switch (operator) {
       case "+":
         setDisplay(`${+firstInput + +secondInput}`);
