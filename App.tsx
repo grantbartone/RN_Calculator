@@ -46,28 +46,23 @@ export default function App() {
   const handleInputPress = (value: string) => {
     const isOperator = ["+", "-", "*", "/"].includes(value);
 
-    if (!isOperator && !operator && !secondInput) {
+    if (!firstInput) {
+      if (isOperator) return;
+
       const next = !firstInput ? value : firstInput + value;
       setDisplay(next);
       setFirstInput(next);
-      return;
-    }
+    } else if (isOperator) {
+      // Multiple calculations not supported
+      if (secondInput) return;
 
-    if (isOperator && firstInput) {
-      if (!secondInput) {
-        // Update the operator until a secondInput is entered
-        setOperator(value);
-        return;
-      } else {
-        // Multiple calculations not supported
-        return;
-      }
+      // Update the operator until a secondInput is entered
+      setOperator(value);
+    } else {
+      const next = !secondInput ? value : secondInput + value;
+      setDisplay(next);
+      setSecondInput(next);
     }
-
-    // Finally, populate the secondInput
-    const next = !secondInput ? value : secondInput + value;
-    setDisplay(next);
-    setSecondInput(next);
   };
 
   return (
