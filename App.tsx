@@ -1,9 +1,189 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { useState } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function App() {
+  const [display, setDisplay] = useState("0");
+  const [firstInput, setFirstInput] = useState<string | undefined>();
+  const [secondInput, setSecondInput] = useState<string | undefined>();
+  const [operator, setOperator] = useState<string | undefined>();
+
+  const clearAll = () => {
+    resetInputs();
+    setDisplay("0");
+  };
+
+  const resetInputs = () => {
+    setFirstInput(undefined);
+    setSecondInput(undefined);
+    setOperator(undefined);
+  };
+
+  const calculateResult = () => {
+    if (operator === "/" && secondInput === "0") {
+      // Set error on divide by zero
+      setDisplay("Error");
+      return;
+    }
+
+    switch (operator) {
+      case "+":
+        setDisplay(`${+firstInput + +secondInput}`);
+        break;
+      case "-":
+        setDisplay(`${+firstInput - +secondInput}`);
+        break;
+      case "*":
+        setDisplay(`${+firstInput * +secondInput}`);
+        break;
+      case "/":
+        setDisplay(`${+firstInput / +secondInput}`);
+        break;
+    }
+
+    resetInputs();
+  };
+
+  const handleInputPress = (value: string) => {
+    const isOperator = ["+", "-", "*", "/"].includes(value);
+
+    if (!firstInput) {
+      if (isOperator) return;
+
+      const next = !firstInput ? value : firstInput + value;
+      setDisplay(next);
+      setFirstInput(next);
+    } else if (isOperator) {
+      // Multiple calculations not supported
+      if (secondInput) return;
+
+      // Update the operator until a secondInput is entered
+      setOperator(value);
+    } else {
+      const next = !secondInput ? value : secondInput + value;
+      setDisplay(next);
+      setSecondInput(next);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
+      <View style={styles.row}>
+        <Pressable
+          style={[styles.button, styles.funcButton, styles.oneColumn]}
+          onPress={clearAll}
+        >
+          <Text>AC</Text>
+        </Pressable>
+        <Text style={styles.display}>{display}</Text>
+      </View>
+
+      <View style={styles.row}>
+        <Pressable
+          style={[styles.button, styles.oneColumn]}
+          onPress={() => handleInputPress("7")}
+        >
+          <Text>7</Text>
+        </Pressable>
+        <Pressable
+          style={[styles.button, styles.oneColumn]}
+          onPress={() => handleInputPress("8")}
+        >
+          <Text>8</Text>
+        </Pressable>
+        <Pressable
+          style={[styles.button, styles.oneColumn]}
+          onPress={() => handleInputPress("9")}
+        >
+          <Text>9</Text>
+        </Pressable>
+        <Pressable
+          style={[styles.button, styles.funcButton, styles.oneColumn]}
+          onPress={() => handleInputPress("/")}
+        >
+          <Text>/</Text>
+        </Pressable>
+      </View>
+
+      <View style={styles.row}>
+        <Pressable
+          style={[styles.button, styles.oneColumn]}
+          onPress={() => handleInputPress("4")}
+        >
+          <Text>4</Text>
+        </Pressable>
+        <Pressable
+          style={[styles.button, styles.oneColumn]}
+          onPress={() => handleInputPress("5")}
+        >
+          <Text>5</Text>
+        </Pressable>
+        <Pressable
+          style={[styles.button, styles.oneColumn]}
+          onPress={() => handleInputPress("6")}
+        >
+          <Text>6</Text>
+        </Pressable>
+        <Pressable
+          style={[styles.button, styles.funcButton, styles.oneColumn]}
+          onPress={() => handleInputPress("*")}
+        >
+          <Text>*</Text>
+        </Pressable>
+      </View>
+
+      <View style={styles.row}>
+        <Pressable
+          style={[styles.button, styles.oneColumn]}
+          onPress={() => handleInputPress("1")}
+        >
+          <Text>1</Text>
+        </Pressable>
+        <Pressable
+          style={[styles.button, styles.oneColumn]}
+          onPress={() => handleInputPress("2")}
+        >
+          <Text>2</Text>
+        </Pressable>
+        <Pressable
+          style={[styles.button, styles.oneColumn]}
+          onPress={() => handleInputPress("3")}
+        >
+          <Text>3</Text>
+        </Pressable>
+        <Pressable
+          style={[styles.button, styles.funcButton, styles.oneColumn]}
+          onPress={() => handleInputPress("-")}
+        >
+          <Text>-</Text>
+        </Pressable>
+      </View>
+
+      <View style={styles.row}>
+        <Pressable
+          style={[styles.button, styles.oneColumn]}
+          onPress={() => handleInputPress("0")}
+        >
+          <Text>0</Text>
+        </Pressable>
+        <Pressable
+          style={[styles.button, styles.oneColumn]}
+          onPress={() => handleInputPress(".")}
+        >
+          <Text>.</Text>
+        </Pressable>
+        <Pressable
+          style={[styles.button, styles.funcButton, styles.oneColumn]}
+          onPress={calculateResult}
+        >
+          <Text>=</Text>
+        </Pressable>
+        <Pressable
+          style={[styles.button, styles.funcButton, styles.oneColumn]}
+          onPress={() => handleInputPress("+")}
+        >
+          <Text>+</Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -11,8 +191,30 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "flex-end",
+    paddingBottom: 100,
+    backgroundColor: "black",
+    color: "white",
+  },
+  row: { flexDirection: "row", height: 100 },
+  oneColumn: { flex: 1 },
+  twoColumn: { flex: 2 },
+  threeColumn: { flex: 3 },
+  button: {
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    backgroundColor: "gray",
+  },
+  funcButton: { backgroundColor: "orange" },
+  display: {
+    flex: 3,
+    borderWidth: 1,
+    textAlign: "right",
+    color: "white",
+    fontSize: 50,
+    lineHeight: 100,
+    paddingRight: 10,
   },
 });
